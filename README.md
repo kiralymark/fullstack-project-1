@@ -31,6 +31,16 @@ staging
 production     
   
   
+### Branches overview  
+  
+( feature-1 )  
+( feature-999 )  
+dev-xy  
+main ("develop-branch")  
+staging   
+production     
+  
+  
 ### Currently enabled (security) settings in repository:
   
 Advanced Security -- > Private vulnerability reporting (ON)  
