@@ -8,8 +8,6 @@ Welcome!
 <p role="status">Current database content: @databaseDataString</p>
 
 @code {
-    private string? connectionString;
-
     // Load configuration from appsettings.json and Secret Manager
     IConfiguration config = new ConfigurationBuilder()
         .AddJsonFile("appsettings.json", optional: true)
@@ -17,44 +15,20 @@ Welcome!
         .AddEnvironmentVariables()  // Loads production environment variables
         .Build();
 
+    private string? connectionString;
+
+    // initialize the connectionString (from Secret Manager)
     private void SetDatabaseConnectionString()
     {
         connectionString = config.GetConnectionString("PostgresDb") 
             ?? throw new InvalidOperationException("Connection string 'PostgresDb' not found.");
     }
 
-    // override the OnAfterRender method, which allows the 
-    // page 1 full render and then executes. It also has a 
-    // default input of bool firstRender that you can use as a condition for 
-    // data loads and other ...
-    protected override void OnAfterRender(bool firstRender)
-    {
-        // execute conditionally for loading data, otherwise this will load
-        // every time the page refreshes
-        if(firstRender)
-        {
-            // Do work to load page data and set properties
-            //SetDatabaseConnectionString();
-
-            //IncrementCount();
-        }
-        //IncrementCount();
-    }
-
-
-    // override the OnInitialized method. I use the async version as you 
-    // can kick off your task and let the page basics load, and then it will refresh when it gets set up.
-
-    // This will do work on the page load, like an initial service call to 
-    // populate data, filling in lists conditionally, whatever you need to do. 
-    // BTW, a trick I found is that if you put await Task.Delay(1); as the 
-    // first line of the OnInitializedAsync method body, it will break the 
-    // remaining execution free from the page render, so you can get an initial and 
-    // responsive page while the initial load is still processing in the background. 
-    // Just something to get your page responsive faster.
+    // override the OnInitialized method. The async version 
+    // can kick off the task and let the page basics load, and then it will refresh when it gets set up.
+    // This works on the page load.
     protected override async Task OnInitializedAsync()
     {
-        //IncrementCount();
         SetDatabaseConnectionString();
         GetData();
         await SomeStartupTask();
@@ -65,7 +39,6 @@ Welcome!
         // Do some task based work
         return Task.CompletedTask;
     }
-
 
     private string databaseDataString = "";
 
@@ -82,72 +55,47 @@ Welcome!
             using NpgsqlConnection? con = new NpgsqlConnection(connectionString);
             con.Open();
 
+            // get the data from the database
             string query = "SELECT id, fullname FROM public.users;";
             using NpgsqlCommand? cmd = new NpgsqlCommand(query, con);
             using NpgsqlDataReader reader = cmd.ExecuteReader();
 
+            // print out the data on the 'Login' page
             while (reader.Read())
             {
                 System.Collections.ObjectModel.ReadOnlyCollection<Npgsql.Schema.NpgsqlDbColumn> table = reader.GetColumnSchema();
                 for (int i = 0; i < table.Count; i++)
                 {
-                    //Console.Write($"{table[i].ColumnName}:");
-                    //Debug.Write($"{table[i].ColumnName}:");
-                    SetDatabaseDataString($"{table[i].ColumnName}:");
                     if (table[i].DataType is not null)
                     {
+                        SetDatabaseDataString($"{table[i].ColumnName}:");
                         switch (table[i].DataType.ToString())
                         {
                             case "System.Int32":
-                                //Console.Write(reader.GetInt32(reader.GetOrdinal(table[i].ColumnName)));
-                                //Debug.Write(reader.GetInt32(reader.GetOrdinal(table[i].ColumnName)));
                                 SetDatabaseDataString(reader.GetInt32(reader.GetOrdinal(table[i].ColumnName)).ToString());
                                 break;
                             case "System.Int64":
-                                //Console.Write(reader.GetInt64(reader.GetOrdinal(table[i].ColumnName)));
-                                //Debug.Write(reader.GetInt64(reader.GetOrdinal(table[i].ColumnName)));
                                 SetDatabaseDataString(reader.GetInt64(reader.GetOrdinal(table[i].ColumnName)).ToString());
                                 break;
                             case "System.String":
-                                //Console.Write(reader.GetString(reader.GetOrdinal(table[i].ColumnName)));
-                                //Debug.Write(reader.GetString(reader.GetOrdinal(table[i].ColumnName)));
                                 SetDatabaseDataString(reader.GetString(reader.GetOrdinal(table[i].ColumnName)).ToString());
                                 break;
                         }
-                        //Console.Write(" ");
-                        //Debug.Write(" ");
                         if (i != table.Count - 1)
                         {
                             SetDatabaseDataString(",");
                         }
-                        
                     }
-                    //Console.WriteLine();
-                    //Debug.WriteLine("");
                 }
                 SetDatabaseDataString($";");
-
             }
-
         } 
         catch (Exception ex)
         {
             Console.WriteLine($"Database connection error: {ex.Message}");
         }
 
-
-
     }
 
 
-
-    
-
-    private int currentCount = 0;
-
-    private void IncrementCount()
-    {
-        currentCount++;
-    }
 }
-
