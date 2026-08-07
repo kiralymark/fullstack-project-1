@@ -8,7 +8,7 @@ Welcome!
 <p role="status">Current database content: @currentCount</p>
 
 @code {
-    private string connectionString;
+    private string? connectionString;
 
     // Load configuration from appsettings.json and Secret Manager
     IConfiguration config = new ConfigurationBuilder()
@@ -36,11 +36,33 @@ Welcome!
             // Do work to load page data and set properties
             SetDatabaseConnectionString();
 
-            IncrementCount();
+            //IncrementCount();
         }
+        //IncrementCount();
+    }
+
+
+    // override the OnInitialized method. I use the async version as you 
+    // can kick off your task and let the page basics load, and then it will refresh when it gets set up.
+
+    // This will do work on the page load, like an initial service call to 
+    // populate data, filling in lists conditionally, whatever you need to do. 
+    // BTW, a trick I found is that if you put await Task.Delay(1); as the 
+    // first line of the OnInitializedAsync method body, it will break the 
+    // remaining execution free from the page render, so you can get an initial and 
+    // responsive page while the initial load is still processing in the background. 
+    // Just something to get your page responsive faster.
+    protected override async Task OnInitializedAsync()
+    {
+        IncrementCount();
+        await SomeStartupTask();
     }
         
-    
+    Task SomeStartupTask()
+    {
+        // Do some task based work
+        return Task.CompletedTask;
+    }
 
 
 
