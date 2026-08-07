@@ -1,5 +1,56 @@
 @page "/login"
+@rendermode InteractiveServer
 
 <PageTitle>Login</PageTitle>
 
 Welcome!
+
+<p role="status">Current database content: @currentCount</p>
+
+@code {
+    private string connectionString;
+
+    // Load configuration from appsettings.json and Secret Manager
+    IConfiguration config = new ConfigurationBuilder()
+        .AddJsonFile("appsettings.json", optional: true)
+        .AddUserSecrets<Login>() // Loads local developer secrets
+        .AddEnvironmentVariables()  // Loads production environment variables
+        .Build();
+
+    private void SetDatabaseConnectionString()
+    {
+        connectionString = config.GetConnectionString("PostgresDb") 
+            ?? throw new InvalidOperationException("Connection string 'PostgresDb' not found.");
+    }
+
+    // override the OnAfterRender method, which allows the 
+    // page 1 full render and then executes. It also has a 
+    // default input of bool firstRender that you can use as a condition for 
+    // data loads and other ...
+    protected override void OnAfterRender(bool firstRender)
+    {
+        // execute conditionally for loading data, otherwise this will load
+        // every time the page refreshes
+        if(firstRender)
+        {
+            // Do work to load page data and set properties
+            SetDatabaseConnectionString();
+
+            IncrementCount();
+        }
+    }
+        
+    
+
+
+
+    
+
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}
+
