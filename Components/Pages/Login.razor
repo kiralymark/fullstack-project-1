@@ -34,7 +34,7 @@ Welcome!
         if(firstRender)
         {
             // Do work to load page data and set properties
-            SetDatabaseConnectionString();
+            //SetDatabaseConnectionString();
 
             //IncrementCount();
         }
@@ -55,6 +55,7 @@ Welcome!
     protected override async Task OnInitializedAsync()
     {
         //IncrementCount();
+        SetDatabaseConnectionString();
         GetData();
         await SomeStartupTask();
     }
@@ -90,7 +91,8 @@ Welcome!
                 System.Collections.ObjectModel.ReadOnlyCollection<Npgsql.Schema.NpgsqlDbColumn> table = reader.GetColumnSchema();
                 for (int i = 0; i < table.Count; i++)
                 {
-                    Console.Write($"{table[i].ColumnName}:");
+                    //Console.Write($"{table[i].ColumnName}:");
+                    Debug.Write($"{table[i].ColumnName}:");
                     switch (table[i].DataType.ToString())
                     {
                         case "System.Int32":
