@@ -5,7 +5,7 @@
 
 Welcome!
 
-<p role="status">Current database content: @currentCount</p>
+<p role="status">Current database content: @databaseDataString</p>
 
 @code {
     private string? connectionString;
@@ -54,7 +54,8 @@ Welcome!
     // Just something to get your page responsive faster.
     protected override async Task OnInitializedAsync()
     {
-        IncrementCount();
+        //IncrementCount();
+        GetData();
         await SomeStartupTask();
     }
         
@@ -62,6 +63,65 @@ Welcome!
     {
         // Do some task based work
         return Task.CompletedTask;
+    }
+
+
+    private string databaseDataString = "";
+
+    private void SetDatabaseDataString(string inputString)
+    {
+        databaseDataString = inputString;
+    }
+
+    private void GetData()
+    {
+        try
+        {
+            // 'using' guarantees the connection and command are closed properly
+            using NpgsqlConnection? con = new NpgsqlConnection(connectionString);
+            con.Open();
+
+            string query = "SELECT id, fullname FROM public.users;";
+            using NpgsqlCommand? cmd = new NpgsqlCommand(query, con);
+            using NpgsqlDataReader reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                System.Collections.ObjectModel.ReadOnlyCollection<Npgsql.Schema.NpgsqlDbColumn> table = reader.GetColumnSchema();
+                for (int i = 0; i < table.Count; i++)
+                {
+                    Console.Write($"{table[i].ColumnName}:");
+                    switch (table[i].DataType.ToString())
+                    {
+                        case "System.Int32":
+                            //Console.Write(reader.GetInt32(reader.GetOrdinal(table[i].ColumnName)));
+                            Debug.Write(reader.GetInt32(reader.GetOrdinal(table[i].ColumnName)));
+                            break;
+                        case "System.Int64":
+                            //Console.Write(reader.GetInt64(reader.GetOrdinal(table[i].ColumnName)));
+                            Debug.Write(reader.GetInt64(reader.GetOrdinal(table[i].ColumnName)));
+                            break;
+                        case "System.String":
+                            //Console.Write(reader.GetString(reader.GetOrdinal(table[i].ColumnName)));
+                            Debug.Write(reader.GetString(reader.GetOrdinal(table[i].ColumnName)));
+                            break;
+                    }
+                    //Console.Write(" ");
+                    Debug.Write(" ");
+                }
+                //Console.WriteLine();
+                Debug.WriteLine("");
+                
+            }
+
+        } 
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Database connection error: {ex.Message}");
+        }
+
+
+
     }
 
 
