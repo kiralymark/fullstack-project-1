@@ -1,0 +1,133 @@
+networks:
+  frontend:
+    driver: bridge
+    internal: false
+  backend:
+    driver: bridge
+    internal: false
+
+volumes:
+  postgres-data:
+
+secrets:
+  postgres_user:
+    file: ./secrets/postgres_user.txt
+  postgres_pass:
+    file: ./secrets/postgres_pass.txt
+  postgres_db:
+    file: ./secrets/postgres_db.txt
+  pgadmin_email:
+    file: ./secrets/pgadmin_email.txt
+  pgadmin_pass:
+    file: ./secrets/pgadmin_pass.txt
+
+services:
+  fullstack-project-1:
+    build:
+      context: .
+      dockerfile: Dockerfile          # expects a multi-stage build using
+                                       # mcr.microsoft.com/dotnet/sdk:9.0 (build)
+                                       # and mcr.microsoft.com/dotnet/aspnet:9.0 (runtime)
+    image: fullstack-project-1:local
+    ports:
+      - "127.0.0.1:8080:8080"
+    secrets:
+      - postgres_user
+      - postgres_pass
+      - postgres_db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+      # No credentials here. ConnectionStrings__PostgresDb is built inside
+      # the container at startup by entrypoint.sh, which reads the same
+      # /run/secrets/* files mounted below. Nothing sensitive appears in
+      # this file, so it's safe to commit to GitHub.
+    networks:
+      - frontend
+      - backend
+    read_only: true
+    tmpfs:
+      - /tmp
+    user: "1001:1001"
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:18.4-alpine@sha256:bbf8ecc4093dbbaacfc9d62548ca728d33d6d5a6ad236017b6c611e32b5d7cfb
+    # No host port published: the app reaches Postgres over the internal
+    # "backend" network only. Uncomment below only if you need a local
+    # DB client (e.g. psql, DBeaver) connecting from your own machine.
+    # ports:
+    #   - "127.0.0.1:5432:5432"
+    secrets:
+      - postgres_user
+      - postgres_pass
+      - postgres_db
+    environment:
+      - POSTGRES_USER_FILE=/run/secrets/postgres_user
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_pass
+      - POSTGRES_DB_FILE=/run/secrets/postgres_db
+    networks:
+      - backend                       # backend only, no direct frontend access
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$(cat /run/secrets/postgres_user) -d $$(cat /run/secrets/postgres_db)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN               # needs to own /var/lib/postgresql/data
+      - SETUID              # needs to switch to postgres user
+      - SETGID              # needs to switch group
+      - DAC_OVERRIDE        # needs to read/write its own files
+      - FOWNER              # bypass permission checks on owned files
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp
+      - /var/run/postgresql
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+
+  pgadmin:
+    image: dpage/pgadmin4:9.16@sha256:66a300a7ecdcc1f325af0c430315329bca46cd4a7067227d6899802238167c6e
+    restart: on-failure:5
+    ports:
+      - "127.0.0.1:5050:80"
+    secrets:
+      - pgadmin_email
+      - pgadmin_pass
+    # pgAdmin has no documented _FILE variant for these two vars, so a
+    # wrapper script reads the secrets and exports plain env vars just
+    # before handing off to the image's real entrypoint.
+    entrypoint: ["/bin/sh", "/pgadmin-entrypoint.sh"]
+    volumes:
+      - ./pgadmin-entrypoint.sh:/pgadmin-entrypoint.sh:ro
+    networks:
+      - frontend
+      - backend
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    depends_on:
+      postgres:
+        condition: service_healthy

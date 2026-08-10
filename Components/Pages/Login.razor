@@ -1,101 +1,52 @@
 @page "/login"
 @rendermode InteractiveServer
+@using Npgsql
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
 
 <PageTitle>Login</PageTitle>
 
-Welcome!
+<h3>Welcome!</h3>
 
 <p role="status">Current database content: @databaseDataString</p>
 
 @code {
-    // Load configuration from appsettings.json and Secret Manager
-    IConfiguration config = new ConfigurationBuilder()
-        .AddJsonFile("appsettings.json", optional: true)
-        .AddUserSecrets<Login>() // Loads local developer secrets
-        .AddEnvironmentVariables()  // Loads production environment variables
-        .Build();
-
-    private string? connectionString;
-
-    // initialize the connectionString (from Secret Manager)
-    private void SetDatabaseConnectionString()
-    {
-        connectionString = config.GetConnectionString("PostgresDb") 
-            ?? throw new InvalidOperationException("Connection string 'PostgresDb' not found.");
-    }
-
-    // override the OnInitialized method. The async version 
-    // can kick off the task and let the page basics load, and then it will refresh when it gets set up.
-    // This works on the page load.
-    protected override async Task OnInitializedAsync()
-    {
-        SetDatabaseConnectionString();
-        GetData();
-        await SomeStartupTask();
-    }
-
-    Task SomeStartupTask()
-    {
-        // Do some task based work
-        return Task.CompletedTask;
-    }
-
     private string databaseDataString = "";
 
-    private void SetDatabaseDataString(string inputString)
+    protected override async Task OnInitializedAsync()
     {
-        databaseDataString = databaseDataString + inputString;
+        await GetDataAsync();
     }
 
-    private void GetData()
+    private async Task GetDataAsync()
     {
         try
         {
-            // 'using' guarantees the connection and command are closed properly
-            using NpgsqlConnection? con = new NpgsqlConnection(connectionString);
-            con.Open();
+            // Inject configuration from ASP.NET Core DI container (reads environment variables correctly)
+            string connectionString = Configuration.GetConnectionString("PostgresDb") 
+                ?? throw new InvalidOperationException("Connection string 'PostgresDb' not found.");
 
-            // get the data from the database
-            string query = "SELECT id, fullname FROM public.users;";
-            using NpgsqlCommand? cmd = new NpgsqlCommand(query, con);
-            using NpgsqlDataReader reader = cmd.ExecuteReader();
+            await using var con = new NpgsqlConnection(connectionString);
+            await con.OpenAsync();
 
-            // print out the data on the 'Login' page
-            while (reader.Read())
+            // (Note, wrap table and column names in double quotes to handle PostgreSQL case-sensitivity)
+            string query = "SELECT id, fullname FROM public.users;"; 
+            
+            await using var cmd = new NpgsqlCommand(query, con);
+            await using var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
             {
-                System.Collections.ObjectModel.ReadOnlyCollection<Npgsql.Schema.NpgsqlDbColumn> table = reader.GetColumnSchema();
-                for (int i = 0; i < table.Count; i++)
-                {
-                    if (table[i].DataType is not null)
-                    {
-                        SetDatabaseDataString($"{table[i].ColumnName}:");
-                        switch (table[i].DataType.ToString())
-                        {
-                            case "System.Int32":
-                                SetDatabaseDataString(reader.GetInt32(reader.GetOrdinal(table[i].ColumnName)).ToString());
-                                break;
-                            case "System.Int64":
-                                SetDatabaseDataString(reader.GetInt64(reader.GetOrdinal(table[i].ColumnName)).ToString());
-                                break;
-                            case "System.String":
-                                SetDatabaseDataString(reader.GetString(reader.GetOrdinal(table[i].ColumnName)).ToString());
-                                break;
-                        }
-                        if (i != table.Count - 1)
-                        {
-                            SetDatabaseDataString(",");
-                        }
-                    }
-                }
-                SetDatabaseDataString($";");
+                int id = reader.GetInt32(0);
+                string fullname = reader.IsDBNull(1) ? "" : reader.GetString(1);
+
+                databaseDataString += $"id:{id},fullname:{fullname}; ";
             }
-        } 
+        }
         catch (Exception ex)
         {
             Console.WriteLine($"Database connection error: {ex.Message}");
+            databaseDataString = $"Error loading data: {ex.Message}";
         }
-
     }
-
-
 }
