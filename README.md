@@ -61,6 +61,35 @@ main ("develop-branch")
 staging   
 production     
   
+Create new table in database (from cmd):  
+``` 
+docker exec -i DOCKER-NAME psql -U USER -d DB-NAME < scripts/sql/users_table_create.sql
+``` 
+
+Add new data to database (from cmd):  
+``` 
+docker exec -i DOCKER-NAME psql -U USER -d DB-NAME < scripts/sql/users_table_data_insert.sql
+
+docker exec -i DOCKER-NAME psql -U USER -d DB-NAME < scripts/sql/users_table_delete.sql
+``` 
+
+View the data in the database (from cmd / you can also view the data on 'Login' page):  
+``` 
+$ docker exec -it DOCKER-NAME psql -U USER -d DB-NAME -c "\dt"
+
+$ docker exec -it DOCKER-NAME psql -U USER -d DB-NAME -c "SELECT * from users"
+``` 
+  
+
+### Repository - Branches Overview  
+  
+( feature-1 )  
+( feature-999 )  
+dev-xy  
+main ("develop-branch")  
+staging   
+production     
+  
   
 ### Repository - Currently enabled (security) settings in repository:
   
