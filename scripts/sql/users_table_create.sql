@@ -1,0 +1,9 @@
+BEGIN;
+
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL,
+    fullname VARCHAR(32) NOT NULL,
+	PRIMARY KEY (id)
+);
+
+COMMIT;
