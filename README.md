@@ -50,7 +50,11 @@ $ docker exec -it DOCKER-NAME psql -U USER -d DB-NAME -c "\dt"
 
 $ docker exec -it DOCKER-NAME psql -U USER -d DB-NAME -c "SELECT * from users"
 ``` 
-  
+
+
+### Jenkins project related description      
+Jenkins (link - README.md)  
+
   
 ### Repository - Branches Overview  
   
