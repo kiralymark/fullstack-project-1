@@ -12,7 +12,11 @@ pipeline {
             steps {
                 echo "Building.."
                 sh '''
-                echo "doing build operations.."
+                cd jenkins
+                ls -ltra
+                dotnet --version
+                dotnet new console -o App2 --force
+                cp Hello.cs App2/Program.cs
                 '''
             }
         }
@@ -20,7 +24,9 @@ pipeline {
             steps {
                 echo "Testing...."
                 sh '''
-                echo "doing test operations.."
+                cd jenkins
+                dotnet run --project App2
+                dotnet run --project App2 -- Bob
                 '''
             }
         }
