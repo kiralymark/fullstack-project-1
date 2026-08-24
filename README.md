@@ -53,9 +53,9 @@ $ docker exec -it DOCKER-NAME psql -U USER -d DB-NAME -c "SELECT * from users"
 
 
 ### Jenkins project related description      
-Jenkins (link - README.md)  
+[jenkins/README.md](jenkins/README.md)
 
-  
+    
 ### Repository - Branches Overview  
   
 ( feature-1 )  
