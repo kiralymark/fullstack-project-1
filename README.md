@@ -37,7 +37,7 @@ Create new table in database (from cmd):
 docker exec -i DOCKER-NAME psql -U USER -d DB-NAME < scripts/sql/users_table_create.sql
 ``` 
 
-Add new data to database (from cmd):  
+Add new data or delete data in the database (from cmd):  
 ``` 
 docker exec -i DOCKER-NAME psql -U USER -d DB-NAME < scripts/sql/users_table_data_insert.sql
 
@@ -50,8 +50,12 @@ $ docker exec -it DOCKER-NAME psql -U USER -d DB-NAME -c "\dt"
 
 $ docker exec -it DOCKER-NAME psql -U USER -d DB-NAME -c "SELECT * from users"
 ``` 
-  
-  
+
+
+### Jenkins project related description      
+[jenkins/README.md](jenkins/README.md)
+
+    
 ### Repository - Branches Overview  
   
 ( feature-1 )  
