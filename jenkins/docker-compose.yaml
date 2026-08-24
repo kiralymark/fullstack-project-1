@@ -1,0 +1,27 @@
+networks:
+  jenkins:
+    driver: bridge
+
+volumes:
+  jenkins-data:
+  jenkins-docker-certs:
+
+name: jenkins-fullstack-project-1
+services:
+  jenkins-fullstack-project-1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: myjenkins-blueocean:2.547
+    container_name: jenkins-fullstack-project-1
+    restart: on-failure
+    ports:
+      - "127.0.0.1:3000:8080"
+      - "127.0.0.1:50000:50000"
+    environment:
+      - DOCKER_HOST=tcp://docker:2376
+    volumes:
+      - jenkins-data:/var/jenkins_home
+      - jenkins-docker-certs:/certs/client:ro
+    networks:
+      - jenkins

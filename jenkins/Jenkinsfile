@@ -1,0 +1,42 @@
+pipeline {
+    agent { 
+        node {
+            label 'docker-agent-dotnet'
+            }
+      }
+    triggers {
+        pollSCM 'H/5 * * * *'
+    }
+    stages {
+        stage('Build') {
+            steps {
+                echo "Building.."
+                sh '''
+                cd jenkins
+                ls -ltra
+                dotnet --version
+                dotnet new console -o App2 --force
+                cp Hello.cs App2/Program.cs
+                '''
+            }
+        }
+        stage('Test') {
+            steps {
+                echo "Testing...."
+                sh '''
+                cd jenkins
+                dotnet run --project App2
+                dotnet run --project App2 -- Bob
+                '''
+            }
+        }
+        stage('Deliver') {
+            steps {
+                echo 'Deliver......'
+                sh '''
+                echo "doing delivery operations.."
+                '''
+            }
+        }
+    }
+}
