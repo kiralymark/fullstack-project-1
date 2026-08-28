@@ -1,9 +1,16 @@
 # fullstack-project-1
 fullstack-project-1
 
-## About the project  
+## About the project    
+This fullstack project is aiming to implement a Learning Management System website.      
+It's a similar system to: Google Classroom, Moodle, Neptun (HU), Kréta (HU).    
+The project's target group: Students and Teachers.    
   
+With the help of this learning platform project, grades,
+papers, calendar events can be written and viewed in digital form.    
+The system allows you to assign different roles: Admin, Teacher, Student.    
   
+    
 ## Used program and tech versions   
 dbeaver-ce-26.1.4-windows-x86_64    
 
