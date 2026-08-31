@@ -6,7 +6,41 @@
 
 <PageTitle>Login</PageTitle>
 
-<h3>Welcome!</h3>
+<h3>Login:</h3>
+
+<div>
+    <div>
+        <p>Login:</p>
+    </div>
+
+    <div>
+        <label for="email"><b>E-mail</b></label>
+        <input type="email" name="email" placeholder="E-mail" autocomplete="off" required>
+    </div>
+
+    <br />
+
+    <div>
+        <label for="psw"><b>Password</b></label>
+        <input type="password" name="psw" placeholder="Password" autocomplete="off" required>
+    </div>
+
+    <br />
+
+    <div>
+        <button type="submit">Login</button>
+    </div>
+
+    <br />
+
+    <div>
+      <span class="psw"><a href="#">Forgot password?</a></span>
+    </div>
+</div>
+
+<br />
+
+<h3>After Login</h3>
 
 <p role="status">Current database content: @databaseDataString</p>
 
