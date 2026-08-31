@@ -2,6 +2,7 @@
 @rendermode InteractiveServer
 @using Npgsql
 @using Microsoft.Extensions.Configuration
+@using Microsoft.AspNetCore.Authorization
 @inject IConfiguration Configuration
 
 <PageTitle>Login</PageTitle>
@@ -41,8 +42,20 @@
 <br />
 
 <h3>After Login</h3>
+<AuthorizeView>
+    <Authorized>
 
-<p role="status">Current database content: @databaseDataString</p>
+        <!-- <p>Hello, @context.User.Identity?.Name!</p> -->
+        <p>Authorized Only content</p>
+
+        <p role="status">Current database content: @databaseDataString</p>
+
+    </Authorized>
+    <NotAuthorized>
+        <p>You're not authorized.</p>
+    </NotAuthorized>
+</AuthorizeView>
+
 
 @code {
     private string databaseDataString = "";
