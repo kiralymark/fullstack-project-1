@@ -3,38 +3,60 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace fullstack_project_1.Data
 {
-    public class User
+    [Table("AspNetUsers")]
+    public class AspNetUser
     {
 
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Column("id")]
-        public int Id { get; set; }
+        [Column("Id", TypeName = "VARCHAR(450)")]
+        public string Id { get; set; } = null!;
 
-        [Column("full_name")]
-        public string? FullName { get; set; }
+        [Column("AccessFailedCount")]
+        public int AccessFailedCount { get; set; }
 
-        [Column("user_name")]
-        //public string? Email { get; set; }
-        public string? UserName { get; set; }
+        [Column("ConcurrencyStamp")]
+        public string? ConcurrencyStamp { get; set; }
 
-        [Column("email")]
+        [Column("Email", TypeName = "VARCHAR(256)")]
+        [StringLength(256)]
         public string? Email { get; set; }
 
-        [Column("password")]
-        public string? Password { get; set; }
+        [Column("EmailConfirmed")]
+        public bool EmailConfirmed { get; set; }
 
-        [Column("phone")]
-        public string? Phone { get; set; }
+        [Column("LockoutEnabled")]
+        public bool LockoutEnabled { get; set; }
 
-        [Column("address")]
-        public string? Address { get; set; }
+        [Column("LockoutEnd")]
+        public DateTimeOffset? LockoutEnd { get; set; }
 
-        [Column("description_users")]
-        public string? DescriptionUsers { get; set; }
+        [Column("NormalizedEmail", TypeName = "VARCHAR(256)")]
+        [StringLength(256)]
+        public string? NormalizedEmail { get; set; }
 
-        [Column("created_at_users")]
-        public string? CreatedAtUsers { get; set; }
+        [Column("NormalizedUserName", TypeName = "VARCHAR(256)")]
+        [StringLength(256)]
+        public string? NormalizedUserName { get; set; }
+
+        [Column("PasswordHash")]
+        public string? PasswordHash { get; set; }
+
+        [Column("PhoneNumber")]
+        public string? PhoneNumber { get; set; }
+
+        [Column("PhoneNumberConfirmed")]
+        public bool PhoneNumberConfirmed { get; set; }
+
+        [Column("SecurityStamp")]
+        public string? SecurityStamp { get; set; }
+
+        [Column("TwoFactorEnabled")]
+        public bool TwoFactorEnabled { get; set; }
+
+        [Column("UserName", TypeName = "VARCHAR(256)")]
+        [StringLength(256)]
+        public string? UserName { get; set; }
 
     }
+    
 }
