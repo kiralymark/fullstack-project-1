@@ -38,10 +38,10 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:8080
-      # No credentials here. ConnectionStrings__PostgresDb is built inside
+      # No credentials here. Nothing sensitive appears in
+      # this file. ConnectionStrings__PostgresDb is built inside
       # the container at startup by entrypoint.sh, which reads the same
-      # /run/secrets/* files mounted below. Nothing sensitive appears in
-      # this file, so it's safe to commit to GitHub.
+      # /run/secrets/* files mounted below.
     networks:
       - frontend
       - backend
@@ -66,9 +66,9 @@ services:
 
   postgres:
     image: postgres:18.4-alpine@sha256:bbf8ecc4093dbbaacfc9d62548ca728d33d6d5a6ad236017b6c611e32b5d7cfb
-    # No host port published: the app reaches Postgres over the internal
-    # "backend" network only. Uncomment below only if you need a local
-    # DB client (e.g. psql, DBeaver) connecting from your own machine.
+    # The app reaches Postgres over the internal
+    # "backend" network. On the opened port, a local
+    # DB client (e.g. psql, DBeaver) can be connected from your own machine.
     ports:
       - "127.0.0.1:5434:5432"
     secrets:
