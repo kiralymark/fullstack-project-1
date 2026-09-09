@@ -20,6 +20,12 @@ secrets:
     file: ./secrets/pgadmin_email.txt
   pgadmin_pass:
     file: ./secrets/pgadmin_pass.txt
+  jwt_issuer:
+    file: ./secrets/jwt_issuer.txt
+  jwt_audience:
+    file: ./secrets/jwt_audience.txt
+  jwt_secret:
+    file: ./secrets/jwt_secret.txt
 
 services:
   fullstack-project-1:
@@ -35,6 +41,9 @@ services:
       - postgres_user
       - postgres_pass
       - postgres_db
+      - jwt_issuer
+      - jwt_audience
+      - jwt_secret
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:8080
