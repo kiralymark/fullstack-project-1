@@ -36,11 +36,12 @@ builder.Services.AddAuthentication(options =>
 }).AddJwtBearer(options =>
 {
     // Retrieve configuration values using builder.Configuration before setting options
-    string secretString = builder.Configuration.GetSection("JWT")["Secret"]
+    //string secretString = builder.Configuration.GetSection("JWT:Secret").Value
+    string secretString = builder.Configuration["JWT:Secret"]
             ?? throw new InvalidOperationException("Configuration string 'JWT:Secret' not found.");
-    string issuerString = builder.Configuration.GetSection("JWT")["Issuer"]
+    string issuerString = builder.Configuration["JWT:Issuer"]
             ?? throw new InvalidOperationException("Configuration string 'JWT:Issuer' not found.");
-    string audienceString = builder.Configuration.GetSection("JWT")["Audience"]
+    string audienceString = builder.Configuration["JWT:Audience"]
             ?? throw new InvalidOperationException("Configuration string 'JWT:Audience' not found.");
 
     options.SaveToken = true;
