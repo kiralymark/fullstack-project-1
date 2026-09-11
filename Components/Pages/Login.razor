@@ -58,6 +58,8 @@
 </AuthorizeView>
 -->
 
+<p role="status">Current database content: @databaseDataString</p>
+
 
 @code {
     private string databaseDataString = "";
@@ -79,7 +81,7 @@
             await con.OpenAsync();
 
             // (Note, wrap table and column names in double quotes to handle PostgreSQL case-sensitivity)
-            string query = "SELECT id, fullname FROM public.users;"; 
+            string query = "SELECT * FROM public.\"AspNetUsers\";"; 
             
             await using var cmd = new NpgsqlCommand(query, con);
             await using var reader = await cmd.ExecuteReaderAsync();
