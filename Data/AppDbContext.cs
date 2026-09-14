@@ -1,11 +1,13 @@
-using Npgsql;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Npgsql;
 
 namespace fullstack_project_1.Data
 {
 
-    public class AppDbContext: DbContext
+    //public class AppDbContext: DbContext
+    public class AppDbContext : IdentityDbContext<AspNetUser>
     {
         protected readonly IConfiguration Configuration;
 
@@ -46,7 +48,7 @@ namespace fullstack_project_1.Data
 
         }
 
-        public DbSet<User> Users { get; set; }
+        //public DbSet<User> Users { get; set; }
 
 
 
