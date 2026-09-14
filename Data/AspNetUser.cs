@@ -1,61 +1,62 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace fullstack_project_1.Data
 {
     [Table("AspNetUsers")]
-    public class AspNetUser
+    public class AspNetUser : IdentityUser
     {
 
         [Key]
         [Column("Id", TypeName = "VARCHAR(450)")]
-        public string Id { get; set; } = null!;
+        public override string Id { get; set; } = null!;
 
         [Column("AccessFailedCount")]
-        public int AccessFailedCount { get; set; }
+        public override int AccessFailedCount { get; set; }
 
         [Column("ConcurrencyStamp")]
-        public string? ConcurrencyStamp { get; set; }
+        public override string? ConcurrencyStamp { get; set; }
 
         [Column("Email", TypeName = "VARCHAR(256)")]
         [StringLength(256)]
-        public string? Email { get; set; }
+        public override string? Email { get; set; }
 
         [Column("EmailConfirmed")]
-        public bool EmailConfirmed { get; set; }
+        public override bool EmailConfirmed { get; set; }
 
         [Column("LockoutEnabled")]
-        public bool LockoutEnabled { get; set; }
+        public override bool LockoutEnabled { get; set; }
 
         [Column("LockoutEnd")]
-        public DateTimeOffset? LockoutEnd { get; set; }
+        public override DateTimeOffset? LockoutEnd { get; set; }
 
         [Column("NormalizedEmail", TypeName = "VARCHAR(256)")]
         [StringLength(256)]
-        public string? NormalizedEmail { get; set; }
+        public override string? NormalizedEmail { get; set; }
 
         [Column("NormalizedUserName", TypeName = "VARCHAR(256)")]
         [StringLength(256)]
-        public string? NormalizedUserName { get; set; }
+        public override string? NormalizedUserName { get; set; }
 
         [Column("PasswordHash")]
-        public string? PasswordHash { get; set; }
+        public override string? PasswordHash { get; set; }
 
         [Column("PhoneNumber")]
-        public string? PhoneNumber { get; set; }
+        public override string? PhoneNumber { get; set; }
 
         [Column("PhoneNumberConfirmed")]
-        public bool PhoneNumberConfirmed { get; set; }
+        public override bool PhoneNumberConfirmed { get; set; }
 
         [Column("SecurityStamp")]
-        public string? SecurityStamp { get; set; }
+        public override string? SecurityStamp { get; set; }
 
         [Column("TwoFactorEnabled")]
-        public bool TwoFactorEnabled { get; set; }
+        public override bool TwoFactorEnabled { get; set; }
 
         [Column("UserName", TypeName = "VARCHAR(256)")]
         [StringLength(256)]
-        public string? UserName { get; set; }
+        public override string? UserName { get; set; }
 
     }
     
