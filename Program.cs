@@ -15,11 +15,23 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Registers API Controllers and JSON Formatters
+builder.Services.AddControllers();
+
+// Force Kestrel to only listen on HTTP
+//builder.WebHost.ConfigureKestrel(serverOptions =>
+//{
+//    // Clear default endpoints (which often auto-include HTTPS 443)
+//    serverOptions.ListenAnyIP(8080); // Standard HTTP port inside Docker; bypass the search for SSL certs
+//});
+
 // Add services to the container.
 builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+    .AddInteractiveServerComponents();      // Add Razor Components
 
 // Add Identity
+builder.Services.AddDbContext<AppDbContext>();
+
 //builder.Services.AddIdentity<ApplicationUser, IdentityRole>();
 builder.Services.AddIdentity<AspNetUser, IdentityRole>()
         .AddEntityFrameworkStores<AppDbContext>()
@@ -65,7 +77,6 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
-
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -74,11 +85,19 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 app.UseStatusCodePagesWithReExecute("/not-found");
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();                            // the HTTPS redirection middleware call.
+
+// Ensure authentication and authorization middleware are enabled
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseAntiforgery();
 
 app.MapStaticAssets();
+
+// Maps API Controller Endpoints
+app.MapControllers();
+
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
