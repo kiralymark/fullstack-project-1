@@ -82,16 +82,22 @@
 
             // (Note, wrap table and column names in double quotes to handle PostgreSQL case-sensitivity)
             string query = "SELECT * FROM public.\"AspNetUsers\";"; 
+            //string query = "SELECT id FROM public.\"AspNetUsers\";"; 
             
             await using var cmd = new NpgsqlCommand(query, con);
             await using var reader = await cmd.ExecuteReaderAsync();
 
             while (await reader.ReadAsync())
             {
-                int id = reader.GetInt32(0);
-                string fullname = reader.IsDBNull(1) ? "" : reader.GetString(1);
+                //int id = reader.GetInt32(0);
+                //string id = reader.ToString();
+                    //?? throw new InvalidCastException();
+                //int id = reader.GetFieldValue<int>(0);
+                //string fullname = reader.IsDBNull(1) ? "" : reader.GetString(1);
+                string id = reader.GetString(0);
 
-                databaseDataString += $"id:{id},fullname:{fullname}; ";
+                //databaseDataString += $"id:{id},fullname:{fullname}; ";
+                databaseDataString += $"id:{id}; ";
             }
         }
         catch (Exception ex)
