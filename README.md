@@ -1,5 +1,14 @@
 # fullstack-project-1
-fullstack-project-1
+fullstack-project-1  
+  
+Note, the sections 'Installation set up, steps',
+'Installation steps',
+'Database connection and using Environment Variables',
+'Environment Variables set up',
+'Database data set up' 
+are subject to change.    
+Most of the content will be rewritten 
+under these.  
 
 ## About the project    
 This fullstack project is aiming to implement a Learning Management System website.      
