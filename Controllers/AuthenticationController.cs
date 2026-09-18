@@ -143,7 +143,7 @@ namespace fullstack_project_1.Controllers
             var token = new JwtSecurityToken(
                 issuer: issuerString,
                 audience: audienceString,
-                expires: DateTime.UtcNow.AddMinutes(1), // expires: DateTime.UtcNow.AddMinutes(10), ; (usually it is set to 5 - 10 mins)
+                expires: DateTime.UtcNow.AddMinutes(2), // expires: DateTime.UtcNow.AddMinutes(10), ; (usually it is set to 5 - 10 mins)
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                 );
