@@ -1,5 +1,5 @@
 # fullstack-project-1
-fullstack-project-1  
+**fullstack-project-1**   
   
 Note, the sections 'Installation set up, steps',
 'Installation steps',
@@ -9,7 +9,115 @@ Note, the sections 'Installation set up, steps',
 are subject to change.    
 Most of the content will be rewritten 
 under these.  
+    
+Note, there are currently some issues in this version that need to be fixed later:  
+-- 'An unhandled error' occurs on Login page
+```
+fullstack-project-1-1  |       Unhandled exception rendering component: Cannot provide a value for property 'Http' on type 'fullstack_project_1.Components.Pages.Login'. There is no registered service of type 'System.Net.Http.HttpClient'.
+fullstack-project-1-1  |       System.InvalidOperationException: Cannot provide a value for property 'Http' on type 'fullstack_project_1.Components.Pages.Login'. There is no registered service of type 'System.Net.Http.HttpClient'.   
+```
+-- Login page only shows the "Checking authorization..." text
+instead of its real content in   
+'Authorized' and
+'NotAuthorized'.   
+-- User Logout only happens if the token expires    
+-- Registration and User Login only works through 
+API endpoints (using Postman).     
+The User cannot login through the 'Login' page's login form.    
+    
+-- Login only works through the Browser's DevTools:      
+   
+Login through the Browser's DevTools:    
+**Prerequisites**    
+-- you have all necessary tables in database       
+-- you registered a user successfully       
+-- you logged in with a user successfully (through Postman)       
+**Verification**   
+1.	Open the Login page in Chrome.
+2.	Open Chrome DevTools (F12) -- > Application tab -- > Local Storage.      
+Verify that the 'authToken' key exists with your JWT token string value.    
+3.	The 'AuthorizeView' will re-render to display 'Authorized' block contents automatically.    
+Refresh the webpage or switch to a different page.     
+  
+  
+**Postman requests used (examples):**   
+  
+**01**   
+POST    
+BODY: RAW, JSON     
+  
+``` http://IPADDRESS:PORT/api/authentication/register-user ```
+   
+```
+{
+  "UserName": "TodBob",
+  "Email": "test@test.com",
+  "Password": "Password123Password123"
+}
+```
 
+**02**    
+POST    
+BODY: RAW, JSON   
+  
+``` http://IPADDRESS:PORT/api/authentication/login-user ```
+   
+```
+{
+  "Email": "test@test.com",
+  "Password": "Password123Password123"
+}
+```
+
+**For debugging, '.vscode\launch.json':**    
+```
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": ".NET Core Docker Attach",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:pickRemoteProcess}",
+            "justMyCode": true,
+            "pipeTransport": {
+                "pipeProgram": "docker",
+                "pipeArgs": [ "exec", "-i", "fullstack-project-1-fullstack-project-1-1" ],
+                "debuggerPath": "/home/appuser/vsdbg/vsdbg",
+                "pipeCwd": "${workspaceRoot}",
+                "quoteArgs": false
+            },
+            "sourceFileMap": {
+                "/src": "${workspaceRoot}"
+            }
+        }
+    ]
+}
+```
+  
+**Database data set up 'extra', required tables:**    
+-- AspNetUsers    
+-- RefreshTokens 
+
+**Installation steps 'extra':**   
+Put your real secret values in plain-text files here, one value per file, no
+trailing newline needed:
+``` 
+  secrets/jwt_audience.txt
+  secrets/jwt_issuer.txt
+  secrets/jwt_secret.txt
+``` 
+  
+-- example secrets/jwt_audience:      
+``` User ```
+
+-- example secrets/jwt_issuer:    
+``` http://IPADDRESS:PORT/ ```
+
+-- example secrets/jwt_secret:     
+``` A1aAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAa ``` 
+  
+      
 ## About the project    
 This fullstack project is aiming to implement a Learning Management System website.      
 It's a similar system to: Google Classroom, Moodle, Neptun (HU), Kréta (HU).    
