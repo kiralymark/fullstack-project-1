@@ -3,7 +3,6 @@ using System.Security.Claims;
 using System.Text;
 using fullstack_project_1.Data;
 using fullstack_project_1.Data.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -16,7 +15,6 @@ namespace fullstack_project_1.Controllers
     {
         // inject services into api endpoints
 
-        //private readonly UserManager<ApplicationUser> _userManager;
         private readonly UserManager<AspNetUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly AppDbContext _context;                     // connection with the postgresql database 
@@ -77,24 +75,6 @@ namespace fullstack_project_1.Controllers
                 return BadRequest("User could not be created!");
             }
 
-            /*
-            switch (payload.Role)
-            {
-                case "Admin":
-                    await _userManager.AddToRoleAsync(newUser, UserRoles.Admin);
-                    break;
-                case "Publisher":
-                    await _userManager.AddToRoleAsync(newUser, UserRoles.Publisher);
-                    break;
-                case "Author":
-                    await _userManager.AddToRoleAsync(newUser, UserRoles.Author);
-                    break;
-                default:
-                    await _userManager.AddToRoleAsync(newUser, UserRoles.User);
-                    break;
-            }
-            */
-
             return Created(nameof(Register), $"User '{payload.Email}' created");
         }
 
@@ -129,21 +109,12 @@ namespace fullstack_project_1.Controllers
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())       // JWT ID, a unique identifier for that specific token
             };
 
-            //Add User Roles
-            /*
-            var userRoles = await _userManager.GetRolesAsync(user);
-            foreach (var userRole in userRoles)
-            {
-                authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-            }
-            */
-
             var authSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretString));
 
             var token = new JwtSecurityToken(
                 issuer: issuerString,
                 audience: audienceString,
-                expires: DateTime.UtcNow.AddMinutes(2), // expires: DateTime.UtcNow.AddMinutes(10), ; (usually it is set to 5 - 10 mins)
+                expires: DateTime.UtcNow.AddMinutes(2), // (usually it is set to 5 - 10 mins)
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                 );
