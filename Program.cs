@@ -2,16 +2,8 @@ using fullstack_project_1.Components;
 using fullstack_project_1.Data;
 using fullstack_project_1.Data.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -19,13 +11,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Registers API Controllers and JSON Formatters
 builder.Services.AddControllers();
-
-// Force Kestrel to only listen on HTTP
-//builder.WebHost.ConfigureKestrel(serverOptions =>
-//{
-//    // Clear default endpoints (which often auto-include HTTPS 443)
-//    serverOptions.ListenAnyIP(8080); // Standard HTTP port inside Docker; bypass the search for SSL certs
-//});
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -37,7 +22,6 @@ builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStat
 // Add Identity
 builder.Services.AddDbContext<AppDbContext>();
 
-//builder.Services.AddIdentity<ApplicationUser, IdentityRole>();
 builder.Services.AddIdentity<AspNetUser, IdentityRole>()
         .AddEntityFrameworkStores<AppDbContext>()
         .AddDefaultTokenProviders();
@@ -53,7 +37,6 @@ builder.Services.AddAuthentication(options =>
 }).AddJwtBearer(options =>
 {
     // Retrieve configuration values using builder.Configuration before setting options
-    //string secretString = builder.Configuration.GetSection("JWT:Secret").Value
     string secretString = builder.Configuration["JWT:Secret"]
             ?? throw new InvalidOperationException("Configuration string 'JWT:Secret' not found.");
     string issuerString = builder.Configuration["JWT:Issuer"]
@@ -66,15 +49,12 @@ builder.Services.AddAuthentication(options =>
     options.TokenValidationParameters = new TokenValidationParameters()     // to define a way in which to validate the token that comes from the clients
     {
         ValidateIssuerSigningKey = true,
-        //IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["JWT:Secret"])),  
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretString)), // set issuer key source.
 
         ValidateIssuer = true,
-        //ValidIssuer = Configuration["JWT:Issuer"],
         ValidIssuer = issuerString,
 
         ValidateAudience = true,
-        //ValidAudience = Configuration["JWT:Audience"],
         ValidAudience = audienceString,
 
     }; 
@@ -90,9 +70,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 app.UseStatusCodePagesWithReExecute("/not-found");
-//app.UseHttpsRedirection();                            // the HTTPS redirection middleware call.
 
-// Ensure authentication and authorization middleware are enabled
+// Enable authentication and authorization middleware
 app.UseAuthentication();
 app.UseAuthorization();
 
