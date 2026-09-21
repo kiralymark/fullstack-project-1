@@ -1,17 +1,89 @@
 @page "/login"
 @rendermode InteractiveServer
+@using fullstack_project_1.Data.Authentication;
+@using Microsoft.AspNetCore.Components.Authorization
 @using Npgsql
 @using Microsoft.Extensions.Configuration
+@using Microsoft.AspNetCore.Authorization
+@attribute [AllowAnonymous]
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IHttpContextAccessor HttpContextAccessor
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
 @inject IConfiguration Configuration
 
 <PageTitle>Login</PageTitle>
+<CascadingAuthenticationState>
+    <AuthorizeView>
+        <Authorized>
+            <p>Authorized Only content</p>
+            <p>Hello User!</p>
 
-<h3>Welcome!</h3>
+            <p role="status">Current database content: @databaseDataString</p>
 
-<p role="status">Current database content: @databaseDataString</p>
+        </Authorized>
+        <NotAuthorized>
+            <h3>Login to LMS App:</h3>
+
+            <EditForm Model="loginModel" OnValidSubmit="HandleLogin" Context="editContext">
+                <div>
+
+                    <div>
+                        <label for="email"><b>E-mail</b></label>
+                        <InputText id="email" @bind-Value="loginModel.Email" placeholder="E-mail" required />
+                    </div>
+
+                    <br />
+
+                    <div>
+                        <label for="psw"><b>Password</b></label>
+                        <InputText id="psw" type="password" @bind-Value="loginModel.Password" placeholder="Password" required />
+                    </div>
+
+                    <br />
+
+                    <div>
+                        <button type="submit">Login</button>
+                    </div>
+
+                    <br />
+
+                    <div>
+                    <span class="psw"><a href="#">Forgot password?</a></span>
+                    </div>
+
+                </div>
+            </EditForm>
+        </NotAuthorized>
+    </AuthorizeView>
+</CascadingAuthenticationState>
+
 
 @code {
     private string databaseDataString = "";
+    private LoginVM loginModel = new LoginVM();
+
+    private async Task HandleLogin()
+    {
+        var response = await Http.PostAsJsonAsync("api/authentication/login-user", loginModel);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<AuthResultVM>();
+
+            if (result != null)
+            {
+                // 1. Store the token in LocalStorage
+                await JSRuntime.InvokeVoidAsync("localStorage.setItem", "authToken", result.Token);
+
+                // 2. Notify Blazor of the state change
+                ((CustomAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticated(result.Token);
+            }
+
+        }
+
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -30,17 +102,16 @@
             await con.OpenAsync();
 
             // (Note, wrap table and column names in double quotes to handle PostgreSQL case-sensitivity)
-            string query = "SELECT id, fullname FROM public.users;"; 
+            string query = "SELECT \"Email\" FROM public.\"AspNetUsers\";"; 
             
             await using var cmd = new NpgsqlCommand(query, con);
             await using var reader = await cmd.ExecuteReaderAsync();
 
             while (await reader.ReadAsync())
             {
-                int id = reader.GetInt32(0);
-                string fullname = reader.IsDBNull(1) ? "" : reader.GetString(1);
+                string email = reader.GetString(0);
 
-                databaseDataString += $"id:{id},fullname:{fullname}; ";
+                databaseDataString += $"email:{email}; ";
             }
         }
         catch (Exception ex)
