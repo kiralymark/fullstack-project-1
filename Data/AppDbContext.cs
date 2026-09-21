@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Npgsql;
 
 namespace fullstack_project_1.Data
 {
@@ -81,14 +79,6 @@ namespace fullstack_project_1.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //base.OnConfiguring(optionsBuilder);
-
-            //optionsBuilder.UseNpgsql(Configuration.)
-
-            //try
-            //{
-
-
 
             // Inject configuration from ASP.NET Core DI container (reads environment variables correctly)
             string connectionString = Configuration.GetConnectionString("PostgresDb")
@@ -96,22 +86,7 @@ namespace fullstack_project_1.Data
 
             optionsBuilder.UseNpgsql(connectionString);
 
-
-                //using var con = new NpgsqlConnection(connectionString);
-                //con.OpenAsync();
-
-            //}
-            //catch (Exception ex)
-            //{
-
-            //Console.WriteLine($"Database connection error: {ex.Message}");
-            //databaseDataString = $"Error loading data: {ex.Message}";
-
-            //}
-
         }
-
-        //public DbSet<User> Users { get; set; }
 
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
