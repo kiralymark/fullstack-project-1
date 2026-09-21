@@ -137,6 +137,9 @@ To configure a local docker agent template:
 - Configure
 - Tick the checkbox: ' Restrict where this project can be run '
 - Label Expression: docker-agent-dotnet
+- source code management -- > git -- > repository URL: --   
+- source code management -- > Branches to build: */dev-mark   
+- build environment -- > delete workspace before build starts: checkbox ticked  
 - Triggers -- > Poll SCM:   
 ```
 */5 * * * *
@@ -225,10 +228,10 @@ pipeline {
 -- -- Click on ' Build Now '    
   
   
--- Modify a previously created Pipeline (my_build_pipeline_02):   
+-- Modified a previously created Pipeline (my_build_pipeline_02):   
 (+ commands)   
 
-- The script for the 'jenkins/Jenkinsfile':   
+- The modified script for the 'jenkins/Jenkinsfile':   
 ```
 pipeline {
     agent { 
