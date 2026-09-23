@@ -1,0 +1,9 @@
+html, body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    /*font-size: 40px;*/
+}
+
+.nav-item-custom {
+    color: #fff;
+    padding-left: 2rem !important;
+}
