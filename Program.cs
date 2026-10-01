@@ -1,6 +1,7 @@
 using fullstack_project_1.Components;
 using fullstack_project_1.Data;
 using fullstack_project_1.Data.Authentication;
+using fullstack_project_1.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -18,6 +19,8 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+
+builder.Services.AddScoped<SubjectsService>();         // Register the SubjectsService
 
 // Add Identity
 builder.Services.AddDbContext<AppDbContext>();
