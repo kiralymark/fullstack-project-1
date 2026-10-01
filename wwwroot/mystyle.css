@@ -1,9 +1,24 @@
+/*
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    /*font-size: 40px;*/
+    font-size: 40px;
+}*/
+
+/* Custom styles for Sidebar Nav Menu items */
+.nav-item-custom {
+    color: #d7d7d7;
 }
 
-.nav-item-custom {
-    color: #fff;
+.nav-item-heading-custom {
     padding-left: 2rem !important;
 }
+
+.nav-item-top-custom {
+    padding-left: 4rem !important;
+    padding-bottom: 1rem !important;
+}
+
+/*
+.nav-item-bottom-custom {
+    padding-left: 6rem !important;
+}*/
