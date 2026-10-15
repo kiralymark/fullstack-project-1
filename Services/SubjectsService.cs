@@ -17,7 +17,7 @@ namespace fullstack_project_1.Services
 
         public List<Subject> GetAllSubjects() => _context.Subjects.ToList();
 
-        public SubjectVM GetSubjectById(int subjectId)       // public SubjectVM GetSubjectById(int subjectId) 
+        public SubjectVM GetSubjectById(int subjectId)
         {
             var _subject = _context.Subjects.Where(n => n.id_subjects == subjectId).Select(subject => new SubjectVM()
             {
@@ -31,25 +31,6 @@ namespace fullstack_project_1.Services
 
             return _subject;
 
-
-            //var _subject = _context.Subjects.FirstOrDefault(n => n.id_subjects == subjectId);
-
-            //var _subject = _context.Subjects.Select(subject => new SubjectVM()
-            //{
-            /*if(_subject != null)
-            {
-                subject_code = subject.subject_code,
-                subject_name = subject.subject_name,
-                description_subjects = subject.description_subjects,
-                credit = subject.credit,
-                department = subject.department,
-                is_archived = subject.is_archived
-
-                _context.SaveChanges();
-            }*/
-            //}).FirstOrDefault();
-
-            //return _subject;
         }
 
     }
