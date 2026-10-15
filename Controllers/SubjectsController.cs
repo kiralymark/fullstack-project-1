@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace fullstack_project_1.Controllers
 {
+    // (api/subjects/)
     [Route("api/[controller]")]
     [ApiController]
     public class SubjectsController : ControllerBase
