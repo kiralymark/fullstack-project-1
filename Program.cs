@@ -22,6 +22,16 @@ builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStat
 
 builder.Services.AddScoped<SubjectsService>();         // Register the SubjectsService
 
+// IHttpClientFactory usage 
+builder.Services.AddHttpClient("AuthAPI", client =>
+{
+    string apiURLString = builder.Configuration["JWT:Issuer"]
+            ?? throw new InvalidOperationException("Configuration string 'JWT:Issuer' ('apiURLString') not found.");
+
+    // backend API URL and port configure
+    client.BaseAddress = new Uri(apiURLString);       // note, don't use url and port directly ; note, apiURLString and JWT:Issuer value is the same  
+});
+
 // Add Identity
 builder.Services.AddDbContext<AppDbContext>();
 
