@@ -9,7 +9,8 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IHttpContextAccessor HttpContextAccessor
 @inject NavigationManager NavigationManager
-@inject HttpClient Http
+<!-- . inject HttpClient Http-->
+@inject IHttpClientFactory HttpClientFactory
 @inject IJSRuntime JSRuntime
 @inject IConfiguration Configuration
 
@@ -66,7 +67,11 @@
 
     private async Task HandleLogin()
     {
-        var response = await Http.PostAsJsonAsync("api/authentication/login-user", loginModel);
+        // Create the client using the named configuration (in Program.cs)
+        var client = HttpClientFactory.CreateClient("AuthAPI");
+
+        //var response = await Http.PostAsJsonAsync("api/authentication/login-user", loginModel);
+        var response = await client.PostAsJsonAsync("api/authentication/login-user", loginModel);
 
         if (response.IsSuccessStatusCode)
         {
