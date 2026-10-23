@@ -21,6 +21,7 @@ namespace fullstack_project_1.Services
         {
             var _subject = _context.Subjects.Where(n => n.id_subjects == subjectId).Select(subject => new SubjectVM()
             {
+                id_subjects = subject.id_subjects,
                 subject_code = subject.subject_code,
                 subject_name = subject.subject_name,
                 description_subjects = subject.description_subjects,
