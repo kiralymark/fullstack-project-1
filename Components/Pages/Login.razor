@@ -112,11 +112,13 @@
             await using var cmd = new NpgsqlCommand(query, con);
             await using var reader = await cmd.ExecuteReaderAsync();
 
+            int countDatabaseRecord = 0;
             while (await reader.ReadAsync())
             {
                 string email = reader.GetString(0);
 
-                databaseDataString += $"email:{email}; ";
+                databaseDataString += $"email_{countDatabaseRecord}:{email}; ";
+                countDatabaseRecord++;
             }
         }
         catch (Exception ex)
