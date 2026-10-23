@@ -6,6 +6,8 @@ namespace fullstack_project_1.Data
     {
         // a custom view model
 
+        public int id_subjects { get; set; }
+
         public string subject_code { get; set; }
 
         public string subject_name { get; set; }
