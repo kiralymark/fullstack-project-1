@@ -19,19 +19,20 @@
     <div><strong>Subject Details - Main Feed</strong></div>
     <div>- subject name: @subject?.subject_name</div>
     <div>- subject code: @subject?.subject_code</div>
-    <div>- teacher name: @* to-do later: Add teacher property to VM *@ Not specified</div>
+    <div>- teacher name: N/A</div>
     <div>- credit: @subject?.credit</div>
-    <div>- department: @subject?.department</div>
-    <div>- subject description: @(subject?.description_subjects ?? "No description available.")</div>
-    <div>- number of tasks (assignments): 0</div>
+    <div>- department: @(subject?.department != null ? subject?.department : "N/A")</div>
+    <div>- subject description: @(subject?.description_subjects != null ? subject?.description_subjects : "N/A")</div>
+    <div>- is_archived: @subject?.is_archived</div>
+    <div>- number of tasks (assignments): -1</div>
     <div>- a task (assignment) short info: N/A</div>
     <div>- published text based posts: N/A</div>
     <br />
 
     <!-- Tasks Section -->
     <div><strong>Subject Details - Tasks</strong></div>
-    <div>- List of tasks: None</div>
-    <div>- number of tasks (assignments): 0</div>
+    <div>- List of tasks: N/A</div>
+    <div>- number of tasks (assignments): -1</div>
     <div>- start date: N/A</div>
     <div>- end date: N/A</div>
     <div>- is task graded (yes/no): N/A</div>
@@ -40,7 +41,7 @@
 
     <!-- People Section -->
     <div><strong>Subject Details - People</strong></div>
-    <div>- Teachers & Students list goes here</div>
+    <div>People</div> <!--<div>- Teachers & Students list goes here</div>-->
     <br />
 
 </div>
