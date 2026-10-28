@@ -1,6 +1,10 @@
 @page "/subjects"
 @using Microsoft.AspNetCore.Authorization
+@using fullstack_project_1.Services
+@using fullstack_project_1.Data
 <!--// attribute [Authorize]-->
+@inject NavigationManager NavigationManager
+@inject SubjectsService SubjectsService
 
 <PageTitle>Subjects List</PageTitle>
 
@@ -19,7 +23,39 @@
 
     <div>Subjects List | Teaching</div>
     <div style="padding-left: 1rem;">
-        <div><a href="#">Example Classroom 1</a></div>
+        <!--<div><a href="#">Example Classroom 1</a></div>-->
+        
+        @foreach (Subject s in subject)
+        {
+            <div>@s.subject_name</div>
+            <div>@s.subject_code</div>
+            <button type="button" @onclick=@(()=>NavigateToSubjectDetails(s.id_subjects))>Subject Details</button>
+            <br />
+            <br />
+        }
+
     </div>
 
 </div>
+
+@code{
+
+    private List<Subject> subject;
+
+    /*
+    protected override async Task OnInitializedAsync()
+    {
+        SomeStartupMethod();
+        await SomeStartupTask();
+    }*/
+    protected override void OnInitialized()
+    {
+        subject = SubjectsService.GetAllSubjects();
+    }
+
+    private void NavigateToSubjectDetails(int id)
+    {
+        NavigationManager.NavigateTo($"/subjects/{id}");
+    }
+
+}
