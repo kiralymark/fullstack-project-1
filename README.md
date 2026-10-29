@@ -208,7 +208,7 @@ and fullstack-project-1\jenkins\Dockerfile
 Use the command     
 (after using 'cd' to move into the directory):    
 ```
-docker-compose up --build   
+docker-compose up --build
 ```
   
     
@@ -265,12 +265,12 @@ do the following:
   
 -- Create new table in database (from cmd):  
 ``` 
-docker exec -i DOCKER-NAME psql -U USER -d DB-NAME < scripts/sql/users_table_create.sql
+docker exec -i DOCKER-NAME psql -U USER -d DB-NAME < scripts/sql/tables_create.sql
 ``` 
   
 -- Add new data or delete data in the database (from cmd):  
 ``` 
-docker exec -i DOCKER-NAME psql -U USER -d DB-NAME < scripts/sql/users_table_data_insert.sql
+docker exec -i DOCKER-NAME psql -U USER -d DB-NAME < scripts/sql/tables_data_insert.sql
 ``` 
   
     
@@ -315,12 +315,12 @@ YOUR_DB
   
 Create new table in database (from cmd):  
 ``` 
-docker exec -i DOCKER-NAME psql -U USER -d DB-NAME < scripts/sql/users_table_create.sql
+docker exec -i DOCKER-NAME psql -U USER -d DB-NAME < scripts/sql/tables_create.sql
 ``` 
 
 Add new data or delete data in the database (from cmd):  
 ``` 
-docker exec -i DOCKER-NAME psql -U USER -d DB-NAME < scripts/sql/users_table_data_insert.sql
+docker exec -i DOCKER-NAME psql -U USER -d DB-NAME < scripts/sql/tables_data_insert.sql
 
 docker exec -i DOCKER-NAME psql -U USER -d DB-NAME < scripts/sql/users_table_delete.sql
 ``` 
