@@ -23,9 +23,8 @@
 
     <div>Subjects List | Teaching</div>
     <div style="padding-left: 1rem;">
-        <!--<div><a href="#">Example Classroom 1</a></div>-->
-        
-        @foreach (Subject s in subject)
+        <!-- Example Classroom 1... -->
+        @foreach (Subject s in subject) 
         {
             <div>@s.subject_name</div>
             <div>@s.subject_code</div>
@@ -33,7 +32,6 @@
             <br />
             <br />
         }
-
     </div>
 
 </div>
@@ -42,12 +40,6 @@
 
     private List<Subject> subject;
 
-    /*
-    protected override async Task OnInitializedAsync()
-    {
-        SomeStartupMethod();
-        await SomeStartupTask();
-    }*/
     protected override void OnInitialized()
     {
         subject = SubjectsService.GetAllSubjects();
