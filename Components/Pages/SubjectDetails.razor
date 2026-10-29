@@ -1,15 +1,12 @@
-<!-- . page "/subjects/1" -->
 @page "/subjects/{Id:int}"
 @using Microsoft.AspNetCore.Authorization
 @using fullstack_project_1.Services
 @using fullstack_project_1.Data
-<!-- . inherits SubjectDetailsBase -->
 <!--// attribute [Authorize]-->
 @inject NavigationManager NavigationManager
 @inject SubjectsService SubjectsService
 
 <PageTitle>Subjects List</PageTitle>
-<!-- <PageTitle>@(subject != null ? subject.subject_name : "Subject Details")</PageTitle> -->
 
 <div>
     <div><strong>Subject Name:</strong> @subject?.subject_name</div>
