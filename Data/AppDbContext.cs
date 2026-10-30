@@ -87,6 +87,8 @@ namespace fullstack_project_1.Data
             optionsBuilder.UseNpgsql(connectionString);
 
         }
+        
+        public DbSet<Subject> Subjects { get; set; }
 
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 

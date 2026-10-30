@@ -1,7 +1,53 @@
 @page "/subjects"
 @using Microsoft.AspNetCore.Authorization
+@using fullstack_project_1.Services
+@using fullstack_project_1.Data
 @attribute [Authorize]
+@inject NavigationManager NavigationManager
+@inject SubjectsService SubjectsService
 
 <PageTitle>Subjects List</PageTitle>
 
-Subjects List
+<div>
+    <div>Subjects List</div>
+    <br />
+
+    <div style="display:flex;flex-direction:row;text-align:center;">
+        <div style="width:34%;border: 1px solid black;"><a href="#">Subjects List | Teaching</a></div>
+
+        <div style="width:34%;border: 1px solid black;"><a href="#">Subjects List | Entrolled</a></div>
+
+        <div style="width:34%;border: 1px solid black;"><a href="#">Subjects List | Archived Classes</a></div>
+    </div>
+    <br />
+
+    <div>Subjects List | Teaching</div>
+    <div style="padding-left: 1rem;">
+        <!-- Example Classroom 1... -->
+        @foreach (Subject s in subject) 
+        {
+            <div>@s.subject_name</div>
+            <div>@s.subject_code</div>
+            <button type="button" @onclick=@(()=>NavigateToSubjectDetails(s.id_subjects))>Subject Details</button>
+            <br />
+            <br />
+        }
+    </div>
+
+</div>
+
+@code{
+
+    private List<Subject> subject;
+
+    protected override void OnInitialized()
+    {
+        subject = SubjectsService.GetAllSubjects();
+    }
+
+    private void NavigateToSubjectDetails(int id)
+    {
+        NavigationManager.NavigateTo($"/subjects/{id}");
+    }
+
+}
