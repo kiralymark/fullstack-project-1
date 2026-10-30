@@ -9,7 +9,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IHttpContextAccessor HttpContextAccessor
 @inject NavigationManager NavigationManager
-@inject HttpClient Http
+@inject IHttpClientFactory HttpClientFactory
 @inject IJSRuntime JSRuntime
 @inject IConfiguration Configuration
 
@@ -66,7 +66,10 @@
 
     private async Task HandleLogin()
     {
-        var response = await Http.PostAsJsonAsync("api/authentication/login-user", loginModel);
+        // Create the client using the named configuration (in Program.cs)
+        var client = HttpClientFactory.CreateClient("AuthAPI");
+
+        var response = await client.PostAsJsonAsync("api/authentication/login-user", loginModel);
 
         if (response.IsSuccessStatusCode)
         {
@@ -107,11 +110,13 @@
             await using var cmd = new NpgsqlCommand(query, con);
             await using var reader = await cmd.ExecuteReaderAsync();
 
+            int countDatabaseRecord = 0;
             while (await reader.ReadAsync())
             {
                 string email = reader.GetString(0);
 
-                databaseDataString += $"email:{email}; ";
+                databaseDataString += $"email_{countDatabaseRecord}:{email}; ";
+                countDatabaseRecord++;
             }
         }
         catch (Exception ex)

@@ -1,0 +1,57 @@
+@page "/subjects/{Id:int}"
+@using Microsoft.AspNetCore.Authorization
+@using fullstack_project_1.Services
+@using fullstack_project_1.Data
+@attribute [Authorize]
+@inject NavigationManager NavigationManager
+@inject SubjectsService SubjectsService
+
+<PageTitle>Subjects List</PageTitle>
+
+<div>
+    <div><strong>Subject Name:</strong> @subject?.subject_name</div>
+    <br />
+
+    <!-- Main Feed Section -->
+    <div><strong>Subject Details - Main Feed</strong></div>
+    <div>- subject name: @subject?.subject_name</div>
+    <div>- subject code: @subject?.subject_code</div>
+    <div>- teacher name: N/A</div>
+    <div>- credit: @subject?.credit</div>
+    <div>- department: @(subject?.department != null ? subject?.department : "N/A")</div>
+    <div>- subject description: @(subject?.description_subjects != null ? subject?.description_subjects : "N/A")</div>
+    <div>- is_archived: @subject?.is_archived</div>
+    <div>- number of tasks (assignments): -1</div>
+    <div>- a task (assignment) short info: N/A</div>
+    <div>- published text based posts: N/A</div>
+    <br />
+
+    <!-- Tasks Section -->
+    <div><strong>Subject Details - Tasks</strong></div>
+    <div>- List of tasks: N/A</div>
+    <div>- number of tasks (assignments): -1</div>
+    <div>- start date: N/A</div>
+    <div>- end date: N/A</div>
+    <div>- is task graded (yes/no): N/A</div>
+    <div>- view graded task, see percentage: N/A</div>
+    <br />
+
+    <!-- People Section -->
+    <div><strong>Subject Details - People</strong></div>
+    <div>People</div> <!--<div>- Teachers & Students list goes here</div>-->
+    <br />
+
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private SubjectVM? subject;
+
+    protected override void OnParametersSet()
+    {
+        // Fetch the subject whenever the URL parameter Id changes
+        subject = SubjectsService.GetSubjectById(Id);
+    }
+}

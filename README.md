@@ -10,16 +10,7 @@ are subject to change.
 Most of the content will be rewritten 
 under these.  
     
-Note, there are currently some issues in this version that need to be fixed later:  
--- 'An unhandled error' occurs on Login page
-```
-fullstack-project-1-1  |       Unhandled exception rendering component: Cannot provide a value for property 'Http' on type 'fullstack_project_1.Components.Pages.Login'. There is no registered service of type 'System.Net.Http.HttpClient'.
-fullstack-project-1-1  |       System.InvalidOperationException: Cannot provide a value for property 'Http' on type 'fullstack_project_1.Components.Pages.Login'. There is no registered service of type 'System.Net.Http.HttpClient'.   
-```
--- Login page only shows the "Checking authorization..." text
-instead of its real content in   
-'Authorized' and
-'NotAuthorized'.   
+Note, there are currently some issues in this version that need to be fixed later:   
 -- User Logout only happens if the token expires    
 -- Registration and User Login only works through 
 API endpoints (using Postman).     
@@ -96,9 +87,10 @@ BODY: RAW, JSON
 ```
   
 **Database data set up 'extra', required tables:**    
--- AspNetUsers    
--- RefreshTokens 
-
+-- AspNetUsers       
+-- RefreshTokens    
+-- Subjects    
+  
 **Installation steps 'extra':**   
 Put your real secret values in plain-text files here, one value per file, no
 trailing newline needed:
@@ -216,7 +208,7 @@ and fullstack-project-1\jenkins\Dockerfile
 Use the command     
 (after using 'cd' to move into the directory):    
 ```
-docker-compose up --build   
+docker-compose up --build
 ```
   
     
@@ -273,12 +265,12 @@ do the following:
   
 -- Create new table in database (from cmd):  
 ``` 
-docker exec -i DOCKER-NAME psql -U USER -d DB-NAME < scripts/sql/users_table_create.sql
+docker exec -i DOCKER-NAME psql -U USER -d DB-NAME < scripts/sql/tables_create.sql
 ``` 
   
 -- Add new data or delete data in the database (from cmd):  
 ``` 
-docker exec -i DOCKER-NAME psql -U USER -d DB-NAME < scripts/sql/users_table_data_insert.sql
+docker exec -i DOCKER-NAME psql -U USER -d DB-NAME < scripts/sql/tables_data_insert.sql
 ``` 
   
     
@@ -323,12 +315,12 @@ YOUR_DB
   
 Create new table in database (from cmd):  
 ``` 
-docker exec -i DOCKER-NAME psql -U USER -d DB-NAME < scripts/sql/users_table_create.sql
+docker exec -i DOCKER-NAME psql -U USER -d DB-NAME < scripts/sql/tables_create.sql
 ``` 
 
 Add new data or delete data in the database (from cmd):  
 ``` 
-docker exec -i DOCKER-NAME psql -U USER -d DB-NAME < scripts/sql/users_table_data_insert.sql
+docker exec -i DOCKER-NAME psql -U USER -d DB-NAME < scripts/sql/tables_data_insert.sql
 
 docker exec -i DOCKER-NAME psql -U USER -d DB-NAME < scripts/sql/users_table_delete.sql
 ``` 

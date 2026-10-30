@@ -1,3 +1,4 @@
+-- AspNetCore.Identity Tables
 CREATE TABLE IF NOT EXISTS "AspNetRoles" (
     "Id" VARCHAR(450) NOT NULL,
     "ConcurrencyStamp" TEXT NULL,
@@ -86,4 +87,15 @@ CREATE TABLE IF NOT EXISTS "RefreshTokens" (
     CONSTRAINT "PK_RefreshTokens" PRIMARY KEY ("Id"),
     CONSTRAINT "FK_RefreshTokens_AspNetUsers_UserId" FOREIGN KEY ("UserId") 
         REFERENCES "AspNetUsers" ("Id") ON DELETE RESTRICT
+);
+
+-- Extra Tables
+CREATE TABLE IF NOT EXISTS "Subjects" (
+    id_subjects INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    subject_code VARCHAR(30) UNIQUE NOT NULL,
+    subject_name VARCHAR(100) NOT NULL,
+    description_subjects TEXT,
+    credit INT NOT NULL DEFAULT 0,
+    department VARCHAR(50),
+    is_archived BOOLEAN NOT NULL DEFAULT FALSE
 );
