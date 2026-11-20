@@ -6,6 +6,9 @@ using fullstack_project_1.Data.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.Annotations;
+using Swashbuckle.AspNetCore;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace fullstack_project_1.Controllers
 {
@@ -46,7 +49,24 @@ namespace fullstack_project_1.Controllers
         }
         
         // create API endpoints
+
+        /// <summary>
+        /// Registers a new user account.
+        /// </summary>
+        /// <remarks>
+        /// Checks for duplicate emails and creates a new ASP.NET Identity user.
+        /// </remarks>
+        /// <response code="201">User created successfully.</response>
+        /// <response code="400">Validation failed or user already exists.</response>
         [HttpPost("register-user")]
+        [SwaggerOperation(
+            Summary = "Register a new user",
+            Description = "Validates payload and creates a new user account",
+            OperationId = "RegisterUser",
+            Tags = new[] { "Users" }
+        )]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register([FromBody] RegisterVM payload)    // register vm -- a custom view model with data 'payload'
         {
             if (!ModelState.IsValid)        // to check if both the user (email) field and password is provided
