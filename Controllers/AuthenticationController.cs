@@ -62,8 +62,8 @@ namespace fullstack_project_1.Controllers
         [SwaggerOperation(
             Summary = "Register a new user",
             Description = "Validates payload and creates a new user account",
-            OperationId = "RegisterUser",
-            Tags = new[] { "Users" }
+            OperationId = "RegisterUser"
+            //, Tags = new[] { "Users" }
         )]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -98,7 +98,23 @@ namespace fullstack_project_1.Controllers
             return Created(nameof(Register), $"User '{payload.Email}' created");
         }
 
+        /// <summary>
+        /// Login into a user account. 
+        /// </summary>
+        /// <remarks>
+        /// Login into a ASP.NET Identity user.
+        /// </remarks>
+        /// <response code="200">User login was successfull.</response>
+        /// <response code="400">Authentication failed or user does not exists.</response>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPost("login-user")]
+        [SwaggerOperation(
+            Summary = "Login into a user account",
+            Description = "Login into a ASP.NET Identity user",
+            OperationId = "LoginUser"
+            //, Tags = new[] { "Users" }
+        )]
         public async Task<IActionResult> Login([FromBody]LoginVM payload)       // User Login handling
         {
             if (!ModelState.IsValid)        // to check if both the user (email) field and password is provided
