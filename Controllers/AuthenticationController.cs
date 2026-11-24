@@ -106,8 +106,10 @@ namespace fullstack_project_1.Controllers
         /// </remarks>
         /// <response code="200">User login was successfull.</response>
         /// <response code="400">Authentication failed or user does not exists.</response>
+        /// <response code="401">Unauthorized.</response>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpPost("login-user")]
         [SwaggerOperation(
             Summary = "Login into a user account",
